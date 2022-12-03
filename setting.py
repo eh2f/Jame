@@ -12,8 +12,18 @@ level_map_1 = [
 'XXXXX  P   XX      X                                                   XX                   XX XXX    X    X                ',
 'XXXXXXXXXXXXX       X X  XXX   XX   X X  X  X  X   XX  X  XX  XX  XX   XX  XX          XXXXX                                ',]
 
-
-
+level_map_2 = [
+'      XXX  X        XX       XXX                                     XXXXXX  XXXXXXXXXX                                     ',
+'      P                     X XX                      XXXXX                      X     X                                    ',
+'         XX   XXX  X          XX                                                 X      X                                   ',
+'                       XXX    XX  XX  X                              X                                                      ',
+'             XX  X          X XX         XXX  X  X  X  X  X                      X       X                                  ',
+'                              XX    X                               X       XX  XX                                          ',
+'                              XX X                                               X         XX X X  X       XX               ',
+'                              XXX         X        X  X  X      X  X     X       X                                          ',
+'                              XX        XX                                 X     X                X      XX                 ',
+'                                                              X   X              X           XXX XX                         ',
+'        XX  X  X  X X  XX  XXXX   X  XX                                          X    X   X        XXX X     XXX  X X XX  XF',]
 
 # tile and screen dimensions
 title_size = 64
