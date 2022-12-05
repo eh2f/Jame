@@ -70,3 +70,61 @@ def complete():
 
         pygame.display.update()
 
+
+def dead():
+    working = True
+    pygame.display.set_caption('death (use mouse)')
+
+    # render the restart text
+    restart_text = fonts(60, 'U dead, Restart', (0, 0, 0))
+    restart_rect = restart_text.get_rect()
+    restart_rect.center = (screen_width // 2, screen_height // 2)
+    r_rect = pygame.Rect(restart_rect.x - 25, restart_rect.y - 25, restart_rect.width + 50, restart_rect.height + 50)
+    r_color = '#d32730'
+
+    while working:
+        screen.fill('red')
+        # getting mouse position every time the screen is updated
+        mouse_pos = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+            if over_mouse(r_rect, mouse_pos):
+                r_color = '#ef575f'
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    return
+            else:
+                r_color = '#d32730'
+
+        pygame.draw.rect(screen, r_color, r_rect)
+        # display both text on to the screen
+        screen.blit(restart_text, restart_rect)
+
+        pygame.display.update()
+
+
+def animation_fill(color):
+    working = True
+    pygame.display.set_caption('animating')
+    start_rect = pygame.Rect(screen_width / 2 - 15, screen_height / 2 - 15, 30, 30)
+    another_clock = pygame.time.Clock()
+
+    while working:
+        another_clock.tick(30)
+
+        pygame.draw.rect(screen, color, start_rect)
+
+        start_rect.x -= 15
+        start_rect.y -= 15
+        start_rect.width += 30
+        start_rect.height += 30
+
+        if start_rect.x < 0 and start_rect.y < 0:
+            working = False
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                working = False
+        pygame.display.update()
+

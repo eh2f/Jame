@@ -1,6 +1,8 @@
 import pygame
-
-
+from setting import *
+from tilesz import *
+from player import *
+import Level
 class level:
     def __init__(self, level_input, surface):
         self.display_surface = surface
@@ -17,7 +19,7 @@ class level:
         self.tiles = pygame.sprite.Group()
         self.player = pygame.sprite.GroupSingle()
     
-     for row_index,row in enumerate(layout):
+        for row_index,row in enumerate(layout):
             for column_index,cell in enumerate(row):
                 y_pos = row_index*title_size
                 x_pos = column_index*title_size
@@ -34,7 +36,7 @@ class level:
                     self.player_x = x_pos
                     self.player_y = y_pos
                     # makes player object
-                    user = Player((self.player_x, self.player_y), LVL)
+                    user = Player((self.player_x, self.player_y), Level)
                     # adds player to level
                     self.player.add(user)
                 if(cell == 'F'):
@@ -42,5 +44,14 @@ class level:
                     self.tile_y = y_pos
                     tile = Tile((self.tile_x,self.tile_y), title_size, title_size, 'green')
                     self.tiles.add(tile)
+
+    def scroll_x(self):
+        pass
+    def x_collision(self):
+        pass
+
+    def y_collision(self):
+        pass
+
     def run(self):
         pass
