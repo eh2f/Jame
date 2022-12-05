@@ -7,6 +7,8 @@ from setting import *
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((screen_width, screen_height))
+velX = 3
+velY = 2
 
 
 # Function returns the text you would like to display on the screen, uses built-in pygame function
@@ -24,6 +26,31 @@ def over_mouse(mouse, another):
 # Same as the last checks for collision between 2 rectangles returns true or false
 def over_rect(rect, another):
     return True if rect.colliderect(another) else False
+
+
+def animation_fill(color):
+    working = True
+    pygame.display.set_caption('animating')
+    start_rect = pygame.Rect(screen_width / 2 - 15, screen_height / 2 - 15, 30, 30)
+    another_clock = pygame.time.Clock()
+
+    while working:
+        another_clock.tick(30)
+
+        pygame.draw.rect(screen, color, start_rect)
+
+        start_rect.x -= 15
+        start_rect.y -= 15
+        start_rect.width += 30
+        start_rect.height += 30
+
+        if start_rect.x < 0 and start_rect.y < 0:
+            working = False
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                working = False
+        pygame.display.update()
 
 
 # Complete screen which will be shown when the player or user completes a level
@@ -71,6 +98,7 @@ def complete():
         pygame.display.update()
 
 
+# death screen
 def dead():
     working = True
     pygame.display.set_caption('death (use mouse)')
@@ -104,27 +132,117 @@ def dead():
         pygame.display.update()
 
 
-def animation_fill(color):
+# moving of the character in the level screen
+def moving(keys, character, left_right=True):
+    # init variables
+    jumping = False
+    top = 450
+
+    # check for right key and has to be left_right to be true as if its not true that means that user is going
+    # into a level
+    if (keys[pygame.K_RIGHT] or keys[pygame.K_d]) and left_right:
+        character.x += velX
+
+    # check for left and move left
+    if (keys[pygame.K_LEFT] or keys[pygame.K_a]) and left_right:
+        character.x -= velX
+
+    # check for up key, and character has to be on the ground or else character will be able to fly
+    if (keys[pygame.K_UP] or keys[pygame.K_SPACE] or keys[pygame.K_w]) and character.y == screen_height - 200:
+        jumping = True
+
+    # logic for making sure that the character or player has to come down as well not only up
+    if jumping:
+        if character.y <= top:
+            jumping = False
+        else:
+            character.y -= velY
+    else:
+        # checking for when character is overlapping the holes as here there is no ground so character should fall
+        # all the way down
+        first = screen_width / 3 < character.x < screen_width * 1 / 3 + 50
+        second = screen_width * 2 / 3 < character.x < screen_width * 2 / 3 + 50
+
+        if first or second:
+            lower_bound = screen_height
+        else:
+            lower_bound = screen_height - 200
+
+        if top <= character.y < lower_bound:
+            character.y += velY
+
+
+def leveling():
+    # initialization of variables required for the function
     working = True
-    pygame.display.set_caption('animating')
-    start_rect = pygame.Rect(screen_width / 2 - 15, screen_height / 2 - 15, 30, 30)
+    pygame.display.set_caption('levels')
+    ground = pygame.Rect(0, screen_height - 100, screen_width, 100)
+    character = pygame.Rect(100, screen_height - 200, 50, 100)
     another_clock = pygame.time.Clock()
 
+    # main text generation
+    text = fonts(60, 'Pick Your Level', (0, 0, 0))
+    text_rect = text.get_rect()
+    text_rect.center = (screen_width // 2, 100)
+
+    # level 1 text generation
+    level_one_text = fonts(40, 'Level 1', (0, 0, 0))
+    level_one_rect = level_one_text.get_rect()
+    level_one_rect.topleft = (screen_width // 3, 500)
+
+    # level 1 text generation
+    level_two_text = fonts(40, 'Level 2', (0, 0, 0))
+    level_two_rect = level_two_text.get_rect()
+    level_two_rect.topleft = ((screen_width // 3) * 2, 500)
+
+    # explanation text generation
+    explain_text = fonts(20, 'Use A, W, D or arrows to move into a hole', (0, 0, 0))
+    explain_rect = explain_text.get_rect()
+    explain_rect.topleft = (25, 400)
+
+    # making the rectangle for each level, this will be the hole that the user will jump into to start the level
+    level_one = pygame.Rect(screen_width / 3, screen_height - 100, 100, 100)
+    level_two = pygame.Rect(screen_width * 2 / 3, screen_height - 100, 100, 100)
+
     while working:
-        another_clock.tick(30)
+        another_clock.tick(60)
+        screen.fill('grey')
 
-        pygame.draw.rect(screen, color, start_rect)
+        # rendering all texts
+        screen.blit(text, text_rect)
+        screen.blit(level_one_text, level_one_rect)
+        screen.blit(level_two_text, level_two_rect)
+        screen.blit(explain_text, explain_rect)
 
-        start_rect.x -= 15
-        start_rect.y -= 15
-        start_rect.width += 30
-        start_rect.height += 30
+        keyboard = pygame.key.get_pressed()
 
-        if start_rect.x < 0 and start_rect.y < 0:
+        # checks if character or player's rect collides with either level holes
+        if over_rect(level_one, character) and over_rect(character, ground):
+            # character will no longer be able to move left and right
+            moving(keyboard, character, False)
+            # renders transition screen
+            animation_fill('orange')
+            # moves into the playing level
+            # playing(level_map_1)
+            # once everything has been run it means that game will no longer be played so break the loop
+            working = False
+        elif over_rect(level_two, character) and over_rect(character, ground):
+            moving(keyboard, character, False)
+            animation_fill('orange')
+            # playing(level_map_2)
             working = False
 
+        else:
+            moving(keyboard, character)
+
+        # rendering of rectangle for ground, holes and character
+        pygame.draw.rect(screen, 'blue', ground)
+        pygame.draw.rect(screen, 'black', level_one)
+        pygame.draw.rect(screen, 'black', level_two)
+        pygame.draw.rect(screen, (0, 0, 0), character)
+
+        # checking for user input to close game
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 working = False
         pygame.display.update()
-
