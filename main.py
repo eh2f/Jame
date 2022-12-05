@@ -294,7 +294,7 @@ def menu():
     pygame.display.set_caption('menu (use mouse)')
 
     # render the main menu text
-    main_text = fonts(60, 'JAME', (0, 0, 0))
+    main_text = fonts(60, 'Ĵame', (0, 0, 0))
     main_rect = main_text.get_rect()
     main_rect.center = (screen_width // 2, 100)
 
