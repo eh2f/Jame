@@ -1,3 +1,5 @@
+#Eric Feng E.F, Shivam Saravanakumar S.S, Vignesh Bhavananthan V.B, Labeeb Nasir L.N
+
 import pygame
 import sys
 import Level
