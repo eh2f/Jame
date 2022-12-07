@@ -2,8 +2,8 @@ import pygame
 from setting import *
 from tilesz import *
 from player import *
-import Level
-class level:
+# import Level
+class Level:
     def __init__(self, level_input, surface):
         self.display_surface = surface
         self.level_number = level_input

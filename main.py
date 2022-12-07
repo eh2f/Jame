@@ -2,7 +2,7 @@
 
 import pygame
 import sys
-import Level
+from Level import *
 from setting import *
 
 # initialization of pygame and pygame fonts
@@ -178,7 +178,7 @@ def moving(keys, character, left_right=True):
 
 def playing(level):
     # creates level object to be printed on screen
-    level = Level.Level(level, screen)
+    level = Level(level, screen)
     background = pygame.image.load('background.jpg')
     background = pygame.transform.scale(background, (screen_width,screen_height))
     # stop process for game
@@ -272,7 +272,7 @@ def leveling():
         elif over_rect(level_two, character) and over_rect(character, ground):
             moving(keyboard, character, False)
             animation_fill('orange')
-            # playing(level_map_2)
+            playing(level_map_2)
             working = False
 
         else:
@@ -296,7 +296,7 @@ def menu():
     pygame.display.set_caption('menu (use mouse)')
 
     # render the main menu text
-    main_text = fonts(60, 'JAME', (0, 0, 0))
+    main_text = fonts(60, 'Ĵame', (0, 0, 0))
     main_rect = main_text.get_rect()
     main_rect.center = (screen_width // 2, 100)
 
